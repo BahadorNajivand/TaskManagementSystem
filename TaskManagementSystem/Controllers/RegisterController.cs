@@ -1,8 +1,5 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
-using TaskManagementSystem.Data;
-using TaskManagementSystem.Enums;
-using TaskManagementSystem.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using ModelsAndEnums.Models;
 using TaskManagementSystem.ViewModels;
 
 public class RegisterController : Controller
@@ -23,32 +20,27 @@ public class RegisterController : Controller
     [HttpPost]
     public async Task<IActionResult> Index(RegisterViewModel model)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid) {
+            return View();
+        }
+        // Check if the username is already taken
+        if (_context.Users.Any(u => u.Username == model.Username))
         {
-            if (_context.Users.Any(u => u.Username == model.Username))
-            {
-                ModelState.AddModelError(string.Empty, "Username already exists.");
-                return View(model);
-            }
-
-            // Registration logic
-            // You can create a new User object based on the register form inputs, set the appropriate properties, and save it to the database.
-
-            var newUser = new User
-            {
-                Username = model.Username,
-                Password = model.Password,
-                Role = UserRole.RegularUser
-            };
-
-            _context.Users.Add(newUser);
-            await _context.SaveChangesAsync();
-
-            // You can also perform additional actions after successful registration, such as sending a confirmation email, logging the registration, etc.
-
-            return RedirectToAction("Index", "Login");
+            ModelState.AddModelError("Username", "Username is already taken");
+            return View();
         }
 
-        return View(model);
+        User user = new User();
+
+        user.Username = model.Username;
+        // Set the user's password
+        user.SetPassword(model.Password);
+
+        // Save the new user to the database
+        _context.Users.Add(user);
+        _context.SaveChanges();
+
+        // Redirect to the login page or any other desired page
+        return RedirectToAction("Index", "Login");
     }
 }

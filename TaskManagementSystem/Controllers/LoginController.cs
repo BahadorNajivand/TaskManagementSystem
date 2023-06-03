@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using TaskManagementSystem.Data;
-using TaskManagementSystem.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using ModelsAndEnums.Models;
 using TaskManagementSystem.ViewModels;
 
 
@@ -25,25 +23,21 @@ public class LoginController : Controller
     [HttpPost]
     public async Task<IActionResult> Index(LoginViewModel model)
     {
-        if (ModelState.IsValid)
+        User user = _context.Users.FirstOrDefault(u => u.Username == model.Username);
+
+        if (user != null && user.VerifyPassword(model.Password))
         {
-            var user = _context.Users.FirstOrDefault(u => u.Username == model.Username && u.Password == model.Password);
-            if (user != null)
-            {
-                // Authentication logic
-                // Store the authenticated user's details in a session
+            // Store the authenticated user details in session
+            _httpContextAccessor.HttpContext.Session.SetInt32("UserId", user.UserId);
+            _httpContextAccessor.HttpContext.Session.SetString("Username", user.Username);
 
-                var session = _httpContextAccessor.HttpContext.Session;
-                session.SetInt32("UserId", user.UserId);
-                session.SetString("Username", user.Username);
-                session.SetString("UserRole", user.Role.ToString());
-
-                return RedirectToAction("Index", "Home");
-            }
+            // Redirect to the home page or any other desired page
+            return RedirectToAction("Index", "Tasks");
         }
 
-        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-        return View(model);
+        // Invalid credentials, display error message
+        ModelState.AddModelError("", "Invalid username or password");
+        return View();
     }
 
     [HttpGet]
