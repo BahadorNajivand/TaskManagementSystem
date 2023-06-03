@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@{
+    var session = Context.Session;
+    var username = session.GetString("Username");
+}
+
+
+<div class="text-center">
+    @if (string.IsNullOrEmpty(username))
+    {
+        <h1 class="display-4">Welcome Guest!</h1>
+    }
+    else
+    {
+        <h1 class="display-4">Welcome @username!</h1>
+    }
+</div>
