@@ -36,7 +36,7 @@ public class LoginController : Controller
         }
 
         // Invalid credentials, display error message
-        ModelState.AddModelError("", "Invalid username or password");
+        ModelState.AddModelError("Authentication", "Invalid username or password");
         return View();
     }
 

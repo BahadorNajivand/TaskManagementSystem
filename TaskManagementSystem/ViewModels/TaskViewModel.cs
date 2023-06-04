@@ -11,7 +11,7 @@ namespace TaskManagementSystem.ViewModels
         [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [Display(Name = "Due Date")]
         public DateTime? DueDate { get; set; }
