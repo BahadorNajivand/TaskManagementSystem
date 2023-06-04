@@ -17,7 +17,7 @@ namespace TaskManagementSystem.Controllers
     {
         private readonly WebApplicationDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly int? _userId;
+        public int? _userId;
 
         public TasksController(WebApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
@@ -185,15 +185,16 @@ namespace TaskManagementSystem.Controllers
             {
                 try
                 {
-                    _context.Update(new Task
-                    {
-                        Title = task.Title,
-                        Description = task.Description,
-                        AssigneeId = _userId,
-                        DueDate = task.DueDate,
-                        Priority = task.Priority,
-                        Status = task.Status
-                    });
+                    var existingTask = _context.Tasks.Where(t => t.TaskId == task.TaskId).FirstOrDefault();
+
+                    existingTask.Title = task.Title;
+                    existingTask.Description = task.Description;
+                    existingTask.AssigneeId = _userId;
+                    existingTask.DueDate = task.DueDate;
+                    existingTask.Priority = task.Priority;
+                    existingTask.Status = task.Status;
+
+                    _context.Update(existingTask);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
