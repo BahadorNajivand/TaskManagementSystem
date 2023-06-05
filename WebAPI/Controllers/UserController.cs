@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ModelsAndEnums.Enums;
 using WebAPI.RequestModel;
 using WebAPI.RequestModels;
 
@@ -7,12 +8,10 @@ using WebAPI.RequestModels;
 [Route("api/[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly ILogger<UserController> _logger;
     private readonly IUserService _userService;
 
-    public UserController(ILogger<UserController> logger, IUserService userService)
+    public UserController(IUserService userService)
     {
-        _logger = logger;
         _userService = userService;
     }
 
@@ -22,6 +21,7 @@ public class UserController : ControllerBase
         var user = new ModelsAndEnums.Models.User();
         user.Username = model.Username;
         user.Password = model.Password;
+        user.Role = UserRole.RegularUser;
 
         var result = await _userService.Register(user);
         if (result)
@@ -41,10 +41,10 @@ public class UserController : ControllerBase
     }
 
     // Protected route example
-    [HttpGet("protected")]
     [Authorize]
+    [HttpGet("protected")]
     public IActionResult Protected()
     {
-        return Ok("You are authorized to access this protected route.");
+        return Ok();
     }
 }

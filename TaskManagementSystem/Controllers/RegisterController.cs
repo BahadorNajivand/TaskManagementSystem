@@ -36,6 +36,8 @@ public class RegisterController : Controller
         // Set the user's password
         user.SetPassword(model.Password);
 
+        user.Role = ModelsAndEnums.Enums.UserRole.RegularUser;
+
         // Save the new user to the database
         _context.Users.Add(user);
         _context.SaveChanges();

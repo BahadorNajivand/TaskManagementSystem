@@ -16,7 +16,7 @@ namespace TaskManagementSystem.Controllers
 
         public IActionResult Index()
         {
-            throw new NotFoundException($"Test log.");
+            //throw new NotFoundException($"Test log.");
             return View();
         }
 
