@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using TaskManagementSystem.Exceptions;
 using TaskManagementSystem.Models;
 
 namespace TaskManagementSystem.Controllers
@@ -15,6 +16,7 @@ namespace TaskManagementSystem.Controllers
 
         public IActionResult Index()
         {
+            throw new NotFoundException($"Test log.");
             return View();
         }
 

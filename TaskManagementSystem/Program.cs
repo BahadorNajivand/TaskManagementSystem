@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using TaskManagementSystem.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,8 @@ builder.Services.AddDbContext<WebApplicationDbContext>(options =>
 builder.Services.AddSession();
 
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<ExceptionMiddleware>();
 
 var app = builder.Build();
 
@@ -27,6 +30,8 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.UseSession();
+
+app.UseGlobalExceptionHandler();
 
 app.MapControllerRoute(
     name: "default",

@@ -31,8 +31,7 @@ namespace TaskManagementSystem.Tests.Controllers
 
             var httpContext = new DefaultHttpContext();
             httpContext.Session = new Mock<ISession>().Object;
-            httpContext.Session.SetInt32("UserId", 5);
-            httpContext.Session.SetString("Username", "TheProBN");
+            httpContext.Session.SetInt32("UserId", 1);
 
             var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
             httpContextAccessorMock.Setup(x => x.HttpContext).Returns(httpContext);
